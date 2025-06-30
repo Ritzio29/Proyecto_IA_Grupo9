@@ -14,8 +14,6 @@ app = Flask(__name__)
 # ✅ CONFIGURACIÓN CORS SIMPLIFICADA - Solo una configuración
 CORS(app, origins=["http://127.0.0.1:5500", "http://localhost:5500"])
 
-# ❌ REMOVER todas las configuraciones manuales de CORS
-# No necesitamos @app.before_request ni @app.after_request cuando usamos flask-cors
 
 # Cargar el nuevo dataset numérico
 try:
