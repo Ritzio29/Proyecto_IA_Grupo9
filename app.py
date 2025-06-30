@@ -1,18 +1,19 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
 from xgboost import XGBClassifier
 from sklearn.preprocessing import LabelEncoder
 from flask_cors import CORS
+from sklearn.metrics import accuracy_score
 
 app = Flask(__name__)
 
 # ✅ CONFIGURACIÓN CORS SIMPLIFICADA - Solo una configuración
-CORS(app, origins=["http://127.0.0.1:5500", "http://localhost:5500"])
+CORS(app, origins=["http://127.00.1:5500", "http://localhost:5500"])
 
 
 # Cargar el nuevo dataset numérico
@@ -86,21 +87,45 @@ print(f"✅ División completada: Train={len(X_train)}, Test={len(X_test)}")
 
 # Entrenar modelos
 print("🤖 Entrenando modelos...")
-rf = RandomForestClassifier(random_state=42)
-svm = SVC(probability=True, random_state=42)
-xgb = XGBClassifier(use_label_encoder=False, eval_metric='mlogloss', random_state=42)
-nb = GaussianNB()
 
-rf.fit(X_train, y_train)
-print("   ✅ Random Forest entrenado")
-svm.fit(X_train, y_train)
-print("   ✅ SVM entrenado")
-xgb.fit(X_train, y_train)
-print("   ✅ XGBoost entrenado")
+# Optimización de hiperparámetros con GridSearchCV
+# Random Forest
+param_grid_rf = {
+    'n_estimators': [100, 200],
+    'max_depth': [10, 20, None]
+}
+grid_search_rf = GridSearchCV(RandomForestClassifier(random_state=42), param_grid_rf, cv=3, n_jobs=-1, verbose=1)
+grid_search_rf.fit(X_train, y_train)
+rf = grid_search_rf.best_estimator_
+print(f"   ✅ Random Forest entrenado con mejores hiperparámetros: {grid_search_rf.best_params_}")
+
+# SVM
+param_grid_svm = {
+    'C': [0.1, 1, 10],
+    'kernel': ['linear', 'rbf']
+}
+grid_search_svm = GridSearchCV(SVC(probability=True, random_state=42), param_grid_svm, cv=3, n_jobs=-1, verbose=1)
+grid_search_svm.fit(X_train, y_train)
+svm = grid_search_svm.best_estimator_
+print(f"   ✅ SVM entrenado con mejores hiperparámetros: {grid_search_svm.best_params_}")
+
+# XGBoost
+param_grid_xgb = {
+    'n_estimators': [100, 200],
+    'learning_rate': [0.01, 0.1],
+    'max_depth': [3, 5]
+}
+grid_search_xgb = GridSearchCV(XGBClassifier(use_label_encoder=False, eval_metric='mlogloss', random_state=42), param_grid_xgb, cv=3, n_jobs=-1, verbose=1)
+grid_search_xgb.fit(X_train, y_train)
+xgb = grid_search_xgb.best_estimator_
+print(f"   ✅ XGBoost entrenado con mejores hiperparámetros: {grid_search_xgb.best_params_}")
+
+# Naive Bayes (no tiene hiperparámetros para optimizar con GridSearchCV en este caso)
+nb = GaussianNB()
 nb.fit(X_train, y_train)
 print("   ✅ Naive Bayes entrenado")
 
-# Ensemble con VotingClassifier
+# Ensemble con VotingClassifier (se mantiene soft voting por defecto, la estrategia dinámica se implementa en predict)
 voting = VotingClassifier(
     estimators=[
         ('rf', rf),
@@ -149,21 +174,66 @@ def predict():
         total_score = sum(responses)
         print(f"📊 Score total: {total_score}")
 
-        # Predicciones individuales
-        print("🤖 Calculando predicciones...")
-        preds = {
-            'randomForest': float(rf.predict_proba(responses_np)[0].max()),
-            'svm': float(svm.predict_proba(responses_np)[0].max()),
-            'xgboost': float(xgb.predict_proba(responses_np)[0].max()),
-            'naiveBayes': float(nb.predict_proba(responses_np)[0].max()),
-        }
-        print(f"📈 Predicciones individuales: {preds}")
+        # Predicciones individuales y confianzas
+        print("🤖 Calculando predicciones individuales y confianzas...")
+        
+        # Obtener probabilidades de cada clasificador
+        rf_probs = rf.predict_proba(responses_np)[0]
+        svm_probs = svm.predict_proba(responses_np)[0]
+        xgb_probs = xgb.predict_proba(responses_np)[0]
+        nb_probs = nb.predict_proba(responses_np)[0]
 
-        # Predicción ensemble
-        ensemble_probs = voting.predict_proba(responses_np)[0]
-        final_index = ensemble_probs.argmax()
-        final_label = label_encoder.inverse_transform([final_index])[0]
-        avg_confidence = float(ensemble_probs[final_index])  # ✅ Convertir a float
+        # Confianzas individuales (máxima probabilidad predicha)
+        rf_confidence = float(rf_probs.max())
+        svm_confidence = float(svm_probs.max())
+        xgb_confidence = float(xgb_probs.max())
+        nb_confidence = float(nb_probs.max())
+
+        preds = {
+            'randomForest': rf_confidence,
+            'svm': svm_confidence,
+            'xgboost': xgb_confidence,
+            'naiveBayes': nb_confidence,
+        }
+        print(f"📈 Confianzas individuales: {preds}")
+
+        # Estrategia de votación inteligente y dinámica
+        # Se puede definir un umbral o una lógica más compleja
+        # Por simplicidad, si la confianza promedio de los modelos individuales es alta, usamos soft voting
+        # Si es baja, podríamos considerar hard voting o un modelo específico
+        
+        # Calcular la confianza promedio de los modelos individuales
+        avg_individual_confidence = np.mean([rf_confidence, svm_confidence, xgb_confidence, nb_confidence])
+        print(f"📊 Confianza promedio individual: {avg_individual_confidence}")
+
+        # Umbral para decidir entre soft y hard voting
+        confidence_threshold = 0.75 # Este umbral puede ser ajustado
+
+        if avg_individual_confidence >= confidence_threshold:
+            print("🗳️ Usando Soft Voting debido a alta confianza individual promedio.")
+            ensemble_probs = voting.predict_proba(responses_np)[0]
+            final_index = ensemble_probs.argmax()
+            final_label = label_encoder.inverse_transform([final_index])[0]
+            avg_confidence = float(ensemble_probs[final_index])
+            voting_strategy_used = "soft"
+        else:
+            print("🗳️ Usando Hard Voting debido a baja confianza individual promedio.")
+            # Para hard voting, necesitamos las predicciones de clase de cada modelo
+            rf_pred = rf.predict(responses_np)[0]
+            svm_pred = svm.predict(responses_np)[0]
+            xgb_pred = xgb.predict(responses_np)[0]
+            nb_pred = nb.predict(responses_np)[0]
+
+            # Votación de las clases predichas
+            from collections import Counter
+            hard_votes = [rf_pred, svm_pred, xgb_pred, nb_pred]
+            most_common_vote = Counter(hard_votes).most_common(1)[0][0]
+            final_label = label_encoder.inverse_transform([most_common_vote])[0]
+            
+            # Para la confianza en hard voting, podemos usar la proporción de votos
+            avg_confidence = Counter(hard_votes)[most_common_vote] / len(hard_votes)
+            voting_strategy_used = "hard"
+
         print(f"🎯 Predicción final: {final_label} (confianza: {avg_confidence})")
 
         # Explicación basada en respuestas altas
@@ -179,23 +249,23 @@ def predict():
             "explanation": explanation,
             "models": {
                 "randomForest": {
-                    "accuracy": round(float(rf.score(X_test, y_test)), 4),
+                    "accuracy": round(float(accuracy_score(y_test, rf.predict(X_test))), 4),
                     "confidence": round(float(preds['randomForest']), 4)
                 },
                 "svm": {
-                    "accuracy": round(float(svm.score(X_test, y_test)), 4),
+                    "accuracy": round(float(accuracy_score(y_test, svm.predict(X_test))), 4),
                     "confidence": round(float(preds['svm']), 4)
                 },
                 "xgboost": {
-                    "accuracy": round(float(xgb.score(X_test, y_test)), 4),
+                    "accuracy": round(float(accuracy_score(y_test, xgb.predict(X_test))), 4),
                     "confidence": round(float(preds['xgboost']), 4)
                 },
                 "naiveBayes": {
-                    "accuracy": round(float(nb.score(X_test, y_test)), 4),
+                    "accuracy": round(float(accuracy_score(y_test, nb.predict(X_test))), 4),
                     "confidence": round(float(preds['naiveBayes']), 4)
                 },
             },
-            "votingStrategy": "soft"
+            "votingStrategy": voting_strategy_used
         }
         
         print(f"✅ Respuesta exitosa: {result}")
@@ -213,6 +283,7 @@ def predict():
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({"status": "OK", "message": "Servidor funcionando correctamente"})
+
 from flask import render_template
 
 @app.route('/')
@@ -225,5 +296,3 @@ if __name__ == '__main__':
     print("📊 Modelos entrenados y listos")
     print("🌐 Servidor disponible en: http://127.0.0.1:5000")
     app.run(debug=True, host='127.0.0.1', port=5000)
-
-    
