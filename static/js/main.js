@@ -1,4 +1,3 @@
-//main.js
 function iniciarSesion() {
     document.getElementById("student-section").classList.add("hidden");
     document.getElementById("admin-section").classList.add("hidden");
@@ -236,10 +235,10 @@ function displayResults(result) {
     const explanationDiv = document.getElementById('explanation');
     explanationDiv.innerHTML = `
                 <p><strong>Estrategia de Voting:</strong> ${result.votingStrategy} voting seleccionado automáticamente</p>
-                <p><strong>Modelos utilizados:</strong> Random Forest (${Math.round(result.models.randomForest.accuracy * 100)}%), 
-                SVM (${Math.round(result.models.svm.accuracy * 100)}%), 
-                XGBoost (${Math.round(result.models.xgboost.accuracy * 100)}%), 
-                Naive Bayes (${Math.round(result.models.naiveBayes.accuracy * 100)}%)</p>
+                <p><strong>Modelos utilizados:</strong> Random Forest (${Math.round(result.models.randomForest.confidence * 100)}%), 
+                SVM (${Math.round(result.models.svm.confidence * 100)}%), 
+                XGBoost (${Math.round(result.models.xgboost.confidence * 100)}%), 
+                Naive Bayes (${Math.round(result.models.naiveBayes.confidence * 100)}%)</p>
                 ${result.explanation.length > 0 ?
             `<p><strong>Factores principales:</strong></p><ul class="list-disc list-inside">${result.explanation.map(exp => `<li>${exp}</li>`).join('')}</ul>`
             : '<p>No se identificaron factores de riesgo significativos.</p>'}
@@ -277,11 +276,11 @@ function exportExcel() {
         ['Puntuación PHQ-9', currentResults.score],
         ['Clasificación', currentResults.classification],
         ['Confianza', Math.round(currentResults.confidence * 100) + '%'],
-        ['Estrategia Voting', currentResults.votingStrategy],
-        ['Random Forest', Math.round(currentResults.models.randomForest.accuracy * 100) + '%'],
-        ['SVM', Math.round(currentResults.models.svm.accuracy * 100) + '%'],
-        ['XGBoost', Math.round(currentResults.models.xgboost.accuracy * 100) + '%'],
-        ['Naive Bayes', Math.round(currentResults.models.naiveBayes.accuracy * 100) + '%']
+        ['Estrategia Voting', currentResults.votingStrategy], // Corregido: era votingStrateg
+        ['Random Forest', Math.round(currentResults.models.randomForest.confidence * 100) + '%'],
+        ['SVM', Math.round(currentResults.models.svm.confidence * 100) + '%'],
+        ['XGBoost', Math.round(currentResults.models.xgboost.confidence * 100) + '%'],
+        ['Naive Bayes', Math.round(currentResults.models.naiveBayes.confidence * 100) + '%']
     ];
 
     let csvContent = "data:text/csv;charset=utf-8,";
