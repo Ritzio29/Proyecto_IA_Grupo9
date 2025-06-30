@@ -13,7 +13,7 @@ from sklearn.metrics import accuracy_score
 app = Flask(__name__)
 
 # ✅ CONFIGURACIÓN CORS SIMPLIFICADA - Solo una configuración
-CORS(app, origins=["http://127.00.1:5500", "http://localhost:5500"])
+CORS(app, origins=["http://127.0.0.1:5500", "http://localhost:5500"])
 
 
 # Cargar el nuevo dataset numérico
@@ -249,19 +249,15 @@ def predict():
             "explanation": explanation,
             "models": {
                 "randomForest": {
-                    "accuracy": round(float(accuracy_score(y_test, rf.predict(X_test))), 4),
                     "confidence": round(float(preds['randomForest']), 4)
                 },
                 "svm": {
-                    "accuracy": round(float(accuracy_score(y_test, svm.predict(X_test))), 4),
                     "confidence": round(float(preds['svm']), 4)
                 },
                 "xgboost": {
-                    "accuracy": round(float(accuracy_score(y_test, xgb.predict(X_test))), 4),
                     "confidence": round(float(preds['xgboost']), 4)
                 },
                 "naiveBayes": {
-                    "accuracy": round(float(accuracy_score(y_test, nb.predict(X_test))), 4),
                     "confidence": round(float(preds['naiveBayes']), 4)
                 },
             },
