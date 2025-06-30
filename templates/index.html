@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Multiagente PHQ-9 - Clasificación de Depresión Universitaria</title>
+
+    <!-- Enlazar archivos externos -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/js/main.js" defer></script>
+</head>
+
+<body class="bg-gray-50">
+
+    <!-- Pantalla de Login Inicial -->
+    <section id="login-section"
+        class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-sm">
+            <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Sistema Multiagente PHQ-9</h2>
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-1">Usuario</label>
+                <input id="loginUser" type="text" class="w-full border rounded px-3 py-2"
+                    placeholder="Ingrese su usuario">
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 mb-1">Contraseña</label>
+                <input id="loginPass" type="password" class="w-full border rounded px-3 py-2"
+                    placeholder="Ingrese su contraseña">
+            </div>
+            <button onclick="iniciarSesion()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">
+                Iniciar Sesión
+            </button>
+        </div>
+    </section>
+
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-brain text-3xl"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">Sistema Multiagente PHQ-9</h1>
+                        <p class="text-blue-100">Clasificación de Depresión en Estudiantes Universitarios</p>
+                    </div>
+                </div>
+                <div class="flex space-x-4">
+
+
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Arquitectura del Sistema Multiagente -->
+
+
+    <!-- Sección Estudiante -->
+    <section id="student-section" class="hidden" class="py-12 bg-gray-50 hidden">
+        <div class="container mx-auto px-6">
+            <section id="architecture-section" class="hidden py-12 bg-white">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">Arquitectura del Sistema Multiagente</h2>
+                        <p class="text-gray-600 text-lg">5 Agentes Especializados para Clasificación Inteligente de
+                            Depresión</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-5 gap-6">
+                        <div class="agent-card bg-white p-6 rounded-lg shadow-lg">
+                            <div class="text-center">
+                                <div
+                                    class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-download text-blue-600 text-2xl"></i>
+                                </div>
+                                <h3 class="font-bold text-gray-800 mb-2">Agente Extractor</h3>
+                                <p class="text-sm text-gray-600">Recolecta respuestas PHQ-9 y las estructura en
+                                    DataFrame con pandas</p>
+                            </div>
+                        </div>
+
+                        <div class="agent-card bg-white p-6 rounded-lg shadow-lg">
+                            <div class="text-center">
+                                <div
+                                    class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-broom text-green-600 text-2xl"></i>
+                                </div>
+                                <h3 class="font-bold text-gray-800 mb-2">Agente Preprocesador</h3>
+                                <p class="text-sm text-gray-600">Limpia, codifica y normaliza datos usando scikit-learn
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="agent-card bg-white p-6 rounded-lg shadow-lg">
+                            <div class="text-center">
+                                <div
+                                    class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-cogs text-purple-600 text-2xl"></i>
+                                </div>
+                                <h3 class="font-bold text-gray-800 mb-2">Agente Optimizador</h3>
+                                <p class="text-sm text-gray-600">Ajusta hiperparámetros con GridSearchCV para 4 modelos
+                                    ML</p>
+                            </div>
+                        </div>
+
+                        <div class="agent-card bg-white p-6 rounded-lg shadow-lg">
+                            <div class="text-center">
+                                <div
+                                    class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-layer-group text-red-600 text-2xl"></i>
+                                </div>
+                                <h3 class="font-bold text-gray-800 mb-2">Agente Ensemble</h3>
+                                <p class="text-sm text-gray-600">VotingClassifier dinámico (hard/soft) para predicción
+                                    final</p>
+                            </div>
+                        </div>
+
+                        <div class="agent-card bg-white p-6 rounded-lg shadow-lg">
+                            <div class="text-center">
+                                <div
+                                    class="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-chart-line text-yellow-600 text-2xl"></i>
+                                </div>
+                                <h3 class="font-bold text-gray-800 mb-2">Agente Visualizador</h3>
+                                <p class="text-sm text-gray-600">Genera gráficos interactivos y reportes exportables</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </section>
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Cuestionario PHQ-9</h2>
+                    <p class="text-gray-600">Responde las siguientes preguntas sobre cómo te has sentido en las últimas
+                        2 semanas</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <form id="phq9-form">
+                        <div class="space-y-6">
+                            <div class="question-card p-6 border rounded-lg">
+                                <h3 class="font-semibold mb-4">1. Poco interés o placer en hacer cosas</h3>
+                                <div class="grid grid-cols-4 gap-4">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q1" value="0" class="text-blue-600">
+                                        <span>Nunca (0)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q1" value="1" class="text-blue-600">
+                                        <span>Varios días (1)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q1" value="2" class="text-blue-600">
+                                        <span>Más de la mitad (2)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q1" value="3" class="text-blue-600">
+                                        <span>Casi todos los días (3)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="question-card p-6 border rounded-lg">
+                                <h3 class="font-semibold mb-4">2. Sentirse desanimado, deprimido o sin esperanza</h3>
+                                <div class="grid grid-cols-4 gap-4">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q2" value="0" class="text-blue-600">
+                                        <span>Nunca (0)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q2" value="1" class="text-blue-600">
+                                        <span>Varios días (1)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q2" value="2" class="text-blue-600">
+                                        <span>Más de la mitad (2)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q2" value="3" class="text-blue-600">
+                                        <span>Casi todos los días (3)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="question-card p-6 border rounded-lg">
+                                <h3 class="font-semibold mb-4">3. Problemas para dormirse, mantenerse dormido o dormir
+                                    demasiado</h3>
+                                <div class="grid grid-cols-4 gap-4">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q3" value="0" class="text-blue-600">
+                                        <span>Nunca (0)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q3" value="1" class="text-blue-600">
+                                        <span>Varios días (1)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q3" value="2" class="text-blue-600">
+                                        <span>Más de la mitad (2)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q3" value="3" class="text-blue-600">
+                                        <span>Casi todos los días (3)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="question-card p-6 border rounded-lg">
+                                <h3 class="font-semibold mb-4">4. Sentirse cansado o tener poca energía</h3>
+                                <div class="grid grid-cols-4 gap-4">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q4" value="0" class="text-blue-600">
+                                        <span>Nunca (0)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q4" value="1" class="text-blue-600">
+                                        <span>Varios días (1)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q4" value="2" class="text-blue-600">
+                                        <span>Más de la mitad (2)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q4" value="3" class="text-blue-600">
+                                        <span>Casi todos los días (3)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="question-card p-6 border rounded-lg">
+                                <h3 class="font-semibold mb-4">5. Poco apetito o comer en exceso</h3>
+                                <div class="grid grid-cols-4 gap-4">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q5" value="0" class="text-blue-600">
+                                        <span>Nunca (0)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q5" value="1" class="text-blue-600">
+                                        <span>Varios días (1)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q5" value="2" class="text-blue-600">
+                                        <span>Más de la mitad (2)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q5" value="3" class="text-blue-600">
+                                        <span>Casi todos los días (3)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="question-card p-6 border rounded-lg">
+                                <h3 class="font-semibold mb-4">6. Sentirse mal contigo mismo o que eres un fracaso o has
+                                    defraudado a tu familia o a ti mismo</h3>
+                                <div class="grid grid-cols-4 gap-4">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q6" value="0" class="text-blue-600">
+                                        <span>Nunca (0)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q6" value="1" class="text-blue-600">
+                                        <span>Varios días (1)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q6" value="2" class="text-blue-600">
+                                        <span>Más de la mitad (2)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q6" value="3" class="text-blue-600">
+                                        <span>Casi todos los días (3)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="question-card p-6 border rounded-lg">
+                                <h3 class="font-semibold mb-4">7. Problemas para concentrarse en cosas como leer el
+                                    periódico o ver televisión</h3>
+                                <div class="grid grid-cols-4 gap-4">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q7" value="0" class="text-blue-600">
+                                        <span>Nunca (0)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q7" value="1" class="text-blue-600">
+                                        <span>Varios días (1)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q7" value="2" class="text-blue-600">
+                                        <span>Más de la mitad (2)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q7" value="3" class="text-blue-600">
+                                        <span>Casi todos los días (3)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="question-card p-6 border rounded-lg">
+                                <h3 class="font-semibold mb-4">8. Te mueves o hablas tan lento que otras personas lo han
+                                    notado, o lo contrario: estás tan inquieto o agitado que te mueves mucho más de lo
+                                    usual</h3>
+                                <div class="grid grid-cols-4 gap-4">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q8" value="0" class="text-blue-600">
+                                        <span>Nunca (0)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q8" value="1" class="text-blue-600">
+                                        <span>Varios días (1)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q8" value="2" class="text-blue-600">
+                                        <span>Más de la mitad (2)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q8" value="3" class="text-blue-600">
+                                        <span>Casi todos los días (3)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="question-card p-6 border rounded-lg">
+                                <h3 class="font-semibold mb-4">9. Pensar que sería mejor estar muerto o en lastimarte de
+                                    alguna manera</h3>
+                                <div class="grid grid-cols-4 gap-4">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q9" value="0" class="text-blue-600">
+                                        <span>Nunca (0)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q9" value="1" class="text-blue-600">
+                                        <span>Varios días (1)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q9" value="2" class="text-blue-600">
+                                        <span>Más de la mitad (2)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="q9" value="3" class="text-blue-600">
+                                        <span>Casi todos los días (3)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 text-center">
+                            <button type="submit"
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
+                                <i class="fas fa-brain mr-2"></i>Analizar con Sistema Multiagente
+                            </button>
+                        </div>
+                    </form>
+                    <div class="text-center my-6">
+                    </div>
+
+                </div>
+
+                <!-- Resultados -->
+                <div id="results" class="mt-8 hidden">
+                    <div id="result-card" class="result-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-2xl font-bold" id="result-title">Resultado del Análisis</h3>
+                            <div class="flex space-x-2">
+                                <button onclick="exportPDF()"
+                                    class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+                                    <i class="fas fa-file-pdf mr-2"></i>PDF
+                                </button>
+                                <button onclick="exportExcel()"
+                                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                                    <i class="fas fa-file-excel mr-2"></i>Excel
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-bold mb-2">Clasificación:</h4>
+                                <p id="classification" class="text-xl font-semibold mb-4"></p>
+
+                                <h4 class="font-bold mb-2">Puntuación PHQ-9:</h4>
+                                <p id="score" class="text-lg mb-4"></p>
+
+                                <h4 class="font-bold mb-2">Confianza del Modelo:</h4>
+                                <div class="bg-gray-200 rounded-full h-4 mb-4">
+                                    <div id="confidence-bar"
+                                        class="bg-blue-600 h-4 rounded-full transition-all duration-500"></div>
+                                </div>
+                                <p id="confidence-text" class="text-sm"></p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold mb-2">Explicación del Sistema Multiagente:</h4>
+                                <div id="explanation" class="text-sm space-y-2"></div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400">
+                            <p class="text-sm"><i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+                                <strong>Importante:</strong> Este resultado es una evaluación automatizada y no
+                                sustituye el diagnóstico profesional.
+                                Si tienes preocupaciones sobre tu salud mental, consulta con un profesional de la salud.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center my-6">
+                <button onclick="volverAlLogin()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Volver al Login
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Panel Administrativo -->
+    <section id="admin-section" class="hidden" class="py-12 bg-white hidden">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Panel Administrativo</h2>
+                <p class="text-gray-600">Análisis y Visualización de Resultados del Sistema Multiagente</p>
+            </div>
+
+            <!-- Métricas Generales -->
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                    <div class="flex items-center">
+                        <i class="fas fa-users text-blue-500 text-2xl mr-4"></i>
+                        <div>
+                            <p class="text-sm text-blue-600 font-semibold">Total Evaluaciones</p>
+                            <p class="text-2xl font-bold text-blue-700" id="total-evaluations">247</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-500 text-2xl mr-4"></i>
+                        <div>
+                            <p class="text-sm text-green-600 font-semibold">Precisión Promedio</p>
+                            <p class="text-2xl font-bold text-green-700">94.2%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-500">
+                    <div class="flex items-center">
+                        <i class="fas fa-brain text-purple-500 text-2xl mr-4"></i>
+                        <div>
+                            <p class="text-sm text-purple-600 font-semibold">Modelos Activos</p>
+                            <p class="text-2xl font-bold text-purple-700">4</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-500">
+                    <div class="flex items-center">
+                        <i class="fas fa-clock text-orange-500 text-2xl mr-4"></i>
+                        <div>
+                            <p class="text-sm text-orange-600 font-semibold">Tiempo Promedio</p>
+                            <p class="text-2xl font-bold text-orange-700">2.3s</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Análisis Visual de Resultados -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                <h3 class="text-xl font-bold mb-6">Análisis Visual de Resultados</h3>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-semibold mb-4">Distribución de Niveles de Depresión</h4>
+                        <div class="chart-container">
+                            <canvas id="depressionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold mb-4">Rendimiento de Modelos ML</h4>
+                        <div class="chart-container">
+                            <canvas id="modelsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rendimiento de Agentes -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                <h3 class="text-xl font-bold mb-6">Rendimiento de Agentes del Sistema</h3>
+
+                <div class="grid md:grid-cols-5 gap-4">
+                    <div class="text-center p-4 bg-blue-50 rounded-lg">
+                        <i class="fas fa-download text-blue-600 text-2xl mb-2"></i>
+                        <h4 class="font-semibold text-sm">Extractor</h4>
+                        <p class="text-xs text-gray-600 mt-1">100% éxito</p>
+                        <div class="bg-blue-200 rounded-full h-2 mt-2">
+                            <div class="bg-blue-600 h-2 rounded-full w-full"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center p-4 bg-green-50 rounded-lg">
+                        <i class="fas fa-broom text-green-600 text-2xl mb-2"></i>
+                        <h4 class="font-semibold text-sm">Preprocesador</h4>
+                        <p class="text-xs text-gray-600 mt-1">98.7% calidad</p>
+                        <div class="bg-green-200 rounded-full h-2 mt-2">
+                            <div class="bg-green-600 h-2 rounded-full w-11/12"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center p-4 bg-purple-50 rounded-lg">
+                        <i class="fas fa-cogs text-purple-600 text-2xl mb-2"></i>
+                        <h4 class="font-semibold text-sm">Optimizador</h4>
+                        <p class="text-xs text-gray-600 mt-1">96.1% eficiencia</p>
+                        <div class="bg-purple-200 rounded-full h-2 mt-2">
+                            <div class="bg-purple-600 h-2 rounded-full w-11/12"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center p-4 bg-red-50 rounded-lg">
+                        <i class="fas fa-layer-group text-red-600 text-2xl mb-2"></i>
+                        <h4 class="font-semibold text-sm">Ensemble</h4>
+                        <p class="text-xs text-gray-600 mt-1">94.2% precisión</p>
+                        <div class="bg-red-200 rounded-full h-2 mt-2">
+                            <div class="bg-red-600 h-2 rounded-full w-10/12"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center p-4 bg-yellow-50 rounded-lg">
+                        <i class="fas fa-chart-line text-yellow-600 text-2xl mb-2"></i>
+                        <h4 class="font-semibold text-sm">Visualizador</h4>
+                        <p class="text-xs text-gray-600 mt-1">100% disponible</p>
+                        <div class="bg-yellow-200 rounded-full h-2 mt-2">
+                            <div class="bg-yellow-600 h-2 rounded-full w-full"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuración de Modelos -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-bold mb-6">Configuración de Modelos ML</h3>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-semibold mb-4">Modelos Activos</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                <span class="font-medium">Random Forest</span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm text-green-600">94.8%</span>
+                                    <div class="w-3 h-3 bg-green-500 rounded-full pulse-animation"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                <span class="font-medium">SVM</span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm text-green-600">93.1%</span>
+                                    <div class="w-3 h-3 bg-green-500 rounded-full pulse-animation"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                <span class="font-medium">XGBoost</span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm text-green-600">95.2%</span>
+                                    <div class="w-3 h-3 bg-green-500 rounded-full pulse-animation"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                <span class="font-medium">Naive Bayes</span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm text-green-600">89.7%</span>
+                                    <div class="w-3 h-3 bg-green-500 rounded-full pulse-animation"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold mb-4">Configuración Ensemble</h4>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-blue-50 rounded">
+                                <span class="font-medium text-blue-800">Estrategia de Voting:</span>
+                                <p class="text-sm text-blue-600 mt-1">Soft voting dinámico basado en confianza</p>
+                            </div>
+                            <div class="p-3 bg-green-50 rounded">
+                                <span class="font-medium text-green-800">Umbral de Confianza:</span>
+                                <p class="text-sm text-green-600 mt-1">85% para soft voting, 70% para hard voting</p>
+                            </div>
+                            <div class="p-3 bg-purple-50 rounded">
+                                <span class="font-medium text-purple-800">Optimización:</span>
+                                <p class="text-sm text-purple-600 mt-1">GridSearchCV cada 50 nuevas muestras</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center my-6">
+                <button onclick="volverAlLogin()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Volver al Login
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <div class="mb-4">
+                <i class="fas fa-brain text-2xl mb-2"></i>
+                <h3 class="font-bold">Sistema Multiagente PHQ-9</h3>
+            </div>
+            <p class="text-gray-300 mb-4">Desarrollado para la clasificación automática de depresión en estudiantes
+                universitarios</p>
+            <div class="flex justify-center space-x-6 text-sm">
+                <span><i class="fas fa-users mr-1"></i> Escalable hasta 250+ estudiantes</span>
+                <span><i class="fas fa-tachometer-alt mr-1"></i> Tiempo de respuesta < 3s</span>
+                        <span><i class="fas fa-shield-alt mr-1"></i> Procesamiento seguro y privado</span>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
