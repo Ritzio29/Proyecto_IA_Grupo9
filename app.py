@@ -167,7 +167,8 @@ def predict():
             print(f"❌ Error de conversión: {ve}")
             return jsonify({"error": "Las respuestas deben ser números enteros"}), 400
 
-        responses_np = np.array([responses])
+        # Asegurarse de que responses_np tiene la forma correcta (1, 9) para los modelos
+        responses_np = np.array([responses]).reshape(1, -1)
         print(f"🔢 Array numpy: {responses_np}")
         
         # Calcular el score total
@@ -183,10 +184,17 @@ def predict():
                 # Asegurarse de que el modelo puede predecir probabilidades
                 if hasattr(model, 'predict_proba'):
                     probs = model.predict_proba(input_data)[0]
-                    return float(probs.max())
+                    print(f"DEBUG: {type(model).__name__} predict_proba output: {probs}") # Debugging line
+                    # Asegurarse de que probs no esté vacío antes de llamar a max()
+                    if probs.size > 0:
+                        return float(probs.max())
+                    else:
+                        print(f"⚠️ Advertencia: predict_proba devolvió un array vacío para el modelo {type(model).__name__}")
+                        return 0.0
                 else:
                     # Si el modelo no tiene predict_proba (ej. algunos SVM sin probability=True)
                     # o si hay un problema, devolver 0 o un valor por defecto
+                    print(f"⚠️ Advertencia: El modelo {type(model).__name__} no tiene predict_proba.")
                     return 0.0
             except Exception as e:
                 print(f"⚠️ Advertencia: Error al obtener confianza para el modelo {type(model).__name__}: {e}")
